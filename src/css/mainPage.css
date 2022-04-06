@@ -1,0 +1,36 @@
+@import '~antd/dist/antd.css';
+
+.ant-layout, .ant-layout-footer{
+    background: whitesmoke !important;
+}
+
+html,body,#root{
+    width: 100%;
+}
+
+#upper-head {
+    height: 90px;
+    width: 100%;
+    position: fixed;
+    font-size: 12px;
+    border-bottom: 2px solid #ff6700;
+    background: #fff;
+    color: #b0b0b0;
+}
+
+#mainpage-content {
+    margin: 0 auto;
+    padding-top: 150px;
+    width:72%;
+}
+
+#mainpage-recommend {
+    padding-top: 5px;
+    margin: 5px;
+    height: 360px;
+}
+
+.ant-layout-header {
+    background: rgb(255, 255, 255) !important;
+    padding: 0 !important;
+}

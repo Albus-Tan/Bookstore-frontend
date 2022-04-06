@@ -1,0 +1,21 @@
+@import '~antd/dist/antd.css';
+
+.ant-layout, .ant-layout-footer{
+    background: whitesmoke !important;
+}
+
+html,body,#root{
+    width: 100%;
+}
+
+#bookdetail-content {
+    margin: 0 auto;
+    padding-top: 150px;
+    width:78%;
+}
+
+.ant-layout-header {
+    background: rgb(255, 255, 255) !important;
+    padding: 0 !important;
+}
+
