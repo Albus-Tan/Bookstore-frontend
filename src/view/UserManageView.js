@@ -6,8 +6,8 @@ import {
     LogoutOutlined,
 } from '@ant-design/icons';
 import { Link } from "react-router-dom";
-import {ManageConsoleMenu} from "../components/ManageConsoleMenu";
-import {UserManagement} from "../components/UserManagement";
+import {ManageConsoleMenu} from "../components/Manager/ManageConsoleMenu";
+import {UserManagement} from "../components/Manager/User/UserManagement";
 
 const { Header, Content, Footer, Sider } = Layout;
 

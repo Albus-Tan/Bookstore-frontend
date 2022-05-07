@@ -1,5 +1,5 @@
 import React from "react";
-import '../css/bestSellerList.css'
+import '../../../css/bestSellerList.css'
 
 export class BestSellerList extends React.Component {
     render() {

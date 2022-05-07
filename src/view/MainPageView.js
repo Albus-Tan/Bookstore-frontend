@@ -3,10 +3,10 @@ import {Layout} from 'antd';
 
 import '../css/mainPage.css'
 
-import {HeaderAll} from "../components/HeaderAll";
-import {BookCarousel} from "../components/BookCarousel";
-import {BestSellerList} from "../components/BestSellerList";
-import {BookList} from "../components/BookList";
+import {HeaderAll} from "../components/Customer/Header/HeaderAll";
+import {BookCarousel} from "../components/Customer/Home/BookCarousel";
+import {BestSellerList} from "../components/Customer/Home/BestSellerList";
+import {BookList} from "../components/Customer/BookList";
 
 const { Header, Content, Footer } = Layout;
 

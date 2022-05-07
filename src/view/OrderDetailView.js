@@ -1,10 +1,10 @@
 import React from 'react';
 import {Card, Layout} from "antd";
-import {OrderUserInfoCard} from "../components/Order/OrderUserInfoCard";
-import {OrderItemListCard} from "../components/Order/OrderItemListCard";
-import {OrderInfoCard} from "../components/Order/OrderInfoCard";
-import {OrderOperation} from "../components/Order/OrderOperation";
-import {HeaderAll} from "../components/HeaderAll";
+import {OrderUserInfoCard} from "../components/Customer/Orders/OrderUserInfoCard";
+import {OrderItemListCard} from "../components/Customer/Orders/OrderItemListCard";
+import {OrderInfoCard} from "../components/Customer/Orders/OrderInfoCard";
+import {OrderOperation} from "../components/Customer/Orders/OrderOperation";
+import {HeaderAll} from "../components/Customer/Header/HeaderAll";
 
 import '../css/bookDetail.css'
 

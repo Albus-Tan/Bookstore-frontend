@@ -1,6 +1,6 @@
 import React from 'react';
 import {Card} from "antd";
-import '../../css/orderList.css'
+import '../../../css/orderList.css'
 
 export class OrderItemListCard extends React.Component{
 

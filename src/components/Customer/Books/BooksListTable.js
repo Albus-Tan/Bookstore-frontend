@@ -1,24 +1,10 @@
 import React from 'react';
 import {Table, Button, Image, InputNumber, notification} from 'antd';
 import {EllipsisOutlined, ShoppingCartOutlined,CheckCircleOutlined,} from "@ant-design/icons";
-import {BooksListSearch} from "./BooksListSearch";
-import bookImg from '../assets/book.png'
+import {BooksListSearch} from "../../BooksListSearch";
 import {Link} from "react-router-dom";
-
-let dataSource = [];
-
-for (let i = 0; i < 100; i++) {
-    dataSource.push({
-        key: i.toString(),
-        name: `Book ${i}`,
-        author: 'Author name',
-        ISBN: 'BK20ei30w0202',
-        cover: <Image width={150} src={bookImg}/>,
-        inventory: `${2*i+1}`,
-        number: <InputNumber size="large" min={1} max={100} defaultValue={1} />,
-    });
-}
-
+import {getAllBooks} from "../../../services/bookService";
+import {addCartItem} from "../../../services/cartService";
 
 export class BooksListTable extends React.Component{
     constructor(props) {
@@ -43,7 +29,7 @@ export class BooksListTable extends React.Component{
             },
             {
                 title: 'ISBN',
-                dataIndex: 'ISBN',
+                dataIndex: 'isbn',
                 width: '15%',
                 inputType: 'text',
             },
@@ -58,6 +44,13 @@ export class BooksListTable extends React.Component{
                 dataIndex: 'number',
                 width: '9%',
                 inputType: 'number',
+                render: (_, record) => {
+                    return (
+                        <span>
+                            <InputNumber size="large" min={1} max={100} defaultValue={record.inputNumber} onChange={(value) => this.handleInputNumberChange(value,record.id)}/>
+                        </span>
+                    );
+                },
             },
             {
                 title: 'Operation',
@@ -66,39 +59,59 @@ export class BooksListTable extends React.Component{
                 render: (_, record) => {
                     return (
                         <span>
-                            <Button style={{marginRight: 8,borderColor:'#ff6700',color:'#ff6700'}} icon={<ShoppingCartOutlined />} onClick={() => this.handleAddToCartClicked(record.key)}>Add to cart</Button>
-                            <Link to={'/bookDetail'}><Button style={{marginRight: 8,}} icon={<EllipsisOutlined />} onClick={() => this.handleDetailsClicked(record.key)}>Details</Button></Link>
+                            <Button style={{marginRight: 8,borderColor:'#ff6700',color:'#ff6700'}} icon={<ShoppingCartOutlined />} onClick={() => this.handleAddToCartClicked(record.id, record.inputNumber)}>Add to cart</Button>
+                            <Link to={`/bookDetail/${record.id}`}><Button style={{marginRight: 8,}} icon={<EllipsisOutlined />} >Details</Button></Link>
                         </span>
                     );
                 },
             },
         ];
         this.state={
-            data: dataSource,
+            data: [],
             selectedRowKeys: [],
+            fromBackend: false,
         }
         this.handleSearchDataChange =
             this.handleSearchDataChange.bind(this);
     }
 
-    openAddSuccessNotification = (num) => {
-        notification.open({
-            message: 'Successfully add to cart !',
-            description: num+' added, check for other favours',
-            icon: <CheckCircleOutlined style={{ color: '#ff8f00' }} />,
-            duration: 2,
+    componentDidMount() {
+
+        const callback =  (data) => {
+            console.log("getAllBooks: ", data);
+            // add properties: key(String), number
+            let key = -1;
+            const newData = data.map((book) => {++key; return {
+                ...book,
+                key: key.toString(),
+                inputNumber: 1,
+                cover: <Image width={150} src={book.image}/>,
+            }});
+            console.log("Add properties: ", newData);
+            this.setState({data:newData, fromBackend: true});
+        };
+
+        getAllBooks(callback);
+
+    }
+
+    handleInputNumberChange = (value, id) => {
+        console.log("value, id", value, id);
+        const data = this.state.data;
+        const newData = data.map((book) => {
+            return (id === book.id) ? {
+            ...book,
+            inputNumber: value,
+        } : book
         });
+        this.setState({data:newData, fromBackend: false});
+    }
+
+
+    handleAddToCartClicked = (id, num) => {
+        addCartItem(id, num);
     };
 
-    handleAddToCartClicked = (key) => {
-
-
-        this.openAddSuccessNotification(1);
-    };
-
-    handleDetailsClicked = (key: React.Key) => {
-
-    };
 
     onSelectChange = selectedRowKeys => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -106,29 +119,25 @@ export class BooksListTable extends React.Component{
     };
 
     addSelectedBooksToCart = () => {
-        // ajax request after empty completing
-
         let dataSource = [...this.state.data];
-        const num = this.state.selectedRowKeys.length;
-        for(let i = 0; i < num; i++){
-            console.log(this.state.selectedRowKeys[i]);
-            /*dataSource = dataSource.filter(item => item.key.toString() !== this.state.selectedRowKeys[i])*/
-        }
+        const selectedRowKeys = this.state.selectedRowKeys
+        dataSource.map(book => {
+            if(selectedRowKeys.includes(book.key)){
+                addCartItem(book.id, book.inputNumber);
+            }
+        })
         this.setState(() => ({
             selectedRowKeys: [],
             data: dataSource,
         }));
-
-        this.openAddSuccessNotification(num);
-
     };
 
     handleSearchDataChange(data){
-        this.setState({ data: data, });
+        this.setState({ data: data, fromBackend: false});
     }
 
     render(){
-        const { selectedRowKeys, data } = this.state;
+        const { selectedRowKeys, data, fromBackend } = this.state;
         const columns = this.columns;
         const rowSelection = {
             selectedRowKeys,
@@ -145,7 +154,7 @@ export class BooksListTable extends React.Component{
                         {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
                     </span>
                 </div>
-                <BooksListSearch dataSource={data} onSearchDataChange={this.handleSearchDataChange}/>
+                <BooksListSearch dataSource={data} fromBackend={fromBackend} onSearchDataChange={this.handleSearchDataChange}/>
                 <Table bordered dataSource={data} columns={columns} rowKey={data.key} rowSelection={rowSelection}/>
             </div>
 

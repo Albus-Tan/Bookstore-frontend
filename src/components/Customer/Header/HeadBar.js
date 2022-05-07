@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from 'react-router-dom';
-import '../css/head.css'
+import '../../../css/head.css'
 
 export class HeadBar extends React.Component {
     render() {

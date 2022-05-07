@@ -1,9 +1,9 @@
 import React from 'react';
 import {Layout} from 'antd';
 
-import {BookList} from "../components/BookList";
-import {HeaderAll} from "../components/HeaderAll";
-import {Cart} from "../components/Cart";
+import {BookList} from "../components/Customer/BookList";
+import {HeaderAll} from "../components/Customer/Header/HeaderAll";
+import {Cart} from "../components/Customer/Cart/Cart";
 
 import '../css/cartPage.css'
 

@@ -2,11 +2,27 @@ import React from "react";
 import { Form, Input, Button, Checkbox } from 'antd';
 import { Link } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import '../css/login.css'
+import { useNavigate } from "react-router-dom";
+import '../../css/login.css'
+import * as userService from '../../services/userService'
 
-const NormalLoginForm = () => {
+export const LoginForm = ({onLoginClicked}) => {
+
+    let navigate = useNavigate();
+
+    const loginCallback = (isAuthed) => {
+        console.log("LoginForm isAuthed: " , isAuthed);
+        if(isAuthed) {
+            // 登陆成功，回传状态
+            onLoginClicked(isAuthed);
+            // 跳转回首页
+            navigate("/");
+        }
+    }
+
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
+        userService.login(values.username, values.password, loginCallback);
     };
 
     return (
@@ -15,7 +31,6 @@ const NormalLoginForm = () => {
             className="login-form"
             initialValues={{ remember: true }}
             onFinish={onFinish}
-
         >
             <Form.Item
                 name="username"
@@ -45,7 +60,8 @@ const NormalLoginForm = () => {
 
             <Form.Item>
                 <Button type="primary" htmlType="submit" className="login-form-button">
-                    <Link to="/">Log in</Link>
+                    {/*<Link to="/">Log in</Link>*/}
+                    Log in
                 </Button>
                 Or <a href=""><Link to="/register">register now!</Link></a>
             </Form.Item>
@@ -53,17 +69,5 @@ const NormalLoginForm = () => {
     );
 };
 
-export class LoginForm extends React.Component{
-
-    constructor(props) {
-        super(props);
-    }
-
-    render(){
-        return(
-            <NormalLoginForm />
-        );
-    }
-}
 
 

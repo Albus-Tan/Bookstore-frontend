@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Modal} from "antd";
 import {CheckOutlined, CloseOutlined, PayCircleOutlined} from "@ant-design/icons";
-import '../../css/orderList.css'
+import '../../../css/orderList.css'
 
 export class OrderOperation extends React.Component{
 

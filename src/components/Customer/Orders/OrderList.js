@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'antd';
 
-import '../css/orderList.css'
+import '../../../css/orderList.css'
 import {OrderListCard} from "./OrderListCard";
 const { TabPane } = Tabs;
 

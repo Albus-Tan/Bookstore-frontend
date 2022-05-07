@@ -1,8 +1,8 @@
 import React from 'react';
 import {Table, Input, InputNumber, Form, Typography, Button, Modal, Upload, Image} from 'antd';
 import {DeleteOutlined, PlusOutlined, UploadOutlined} from "@ant-design/icons";
-import {BooksListSearch} from "./BooksListSearch";
-import bookImg from '../assets/book.png'
+import {BooksListSearch} from "../../BooksListSearch";
+import bookImg from '../../../assets/book.png'
 
 let dataSource = [];
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Table, Button, Tag, DatePicker, notification, Popconfirm } from 'antd';
 import {EllipsisOutlined, QuestionCircleOutlined,CheckCircleOutlined,CloseOutlined, SyncOutlined,DeliveredProcedureOutlined,CloseCircleOutlined} from "@ant-design/icons";
-import {BooksListSearch} from "./BooksListSearch";
+import {BooksListSearch} from "../../BooksListSearch";
 import {Link} from "react-router-dom";
 
 const { RangePicker } = DatePicker;

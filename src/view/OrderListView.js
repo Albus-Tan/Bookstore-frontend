@@ -1,9 +1,9 @@
 import React from 'react';
 import {Layout, Select, Input} from 'antd';
 
-import {BookList} from "../components/BookList";
-import {HeaderAll} from "../components/HeaderAll";
-import {OrderList} from "../components/OrderList";
+import {BookList} from "../components/Customer/BookList";
+import {HeaderAll} from "../components/Customer/Header/HeaderAll";
+import {OrderList} from "../components/Customer/Orders/OrderList";
 import '../css/orderList.css'
 const { Header, Content, Footer } = Layout;
 const { Option } = Select;

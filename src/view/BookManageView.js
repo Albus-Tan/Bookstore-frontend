@@ -6,8 +6,8 @@ import {
     LogoutOutlined,
 } from '@ant-design/icons';
 import { Link } from "react-router-dom";
-import {ManageConsoleMenu} from "../components/ManageConsoleMenu";
-import {BooksManagementEditableTable} from "../components/BooksManagementEditableTable";
+import {ManageConsoleMenu} from "../components/Manager/ManageConsoleMenu";
+import {BooksManagementEditableTable} from "../components/Manager/Books/BooksManagementEditableTable";
 
 const { Header, Content, Footer, Sider } = Layout;
 

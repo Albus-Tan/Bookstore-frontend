@@ -1,5 +1,5 @@
 import React from "react";
-import '../css/head.css'
+import '../../css/head.css'
 import { Menu } from "antd";
 import {
     BookOutlined,

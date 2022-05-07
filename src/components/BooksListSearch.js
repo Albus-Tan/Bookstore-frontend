@@ -15,6 +15,12 @@ export class BooksListSearch extends React.Component{
         };
     }
 
+    componentWillReceiveProps(nextProps: Readonly<any>, nextContext: any) {
+        if(nextProps.fromBackend) this.setState({
+            originData: nextProps.dataSource,
+        })
+    }
+
 
     toggleSearch = () => {
         this.setState({

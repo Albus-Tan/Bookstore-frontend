@@ -1,7 +1,7 @@
 import React from "react";
 import {List, Card, Button} from 'antd';
 
-import '../css/orderList.css'
+import '../../../css/orderList.css'
 import {EllipsisOutlined, PayCircleOutlined, CheckOutlined, CloseOutlined} from "@ant-design/icons";
 
 const listData = [];

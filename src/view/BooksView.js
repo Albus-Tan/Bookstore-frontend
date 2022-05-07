@@ -1,9 +1,9 @@
 import React from 'react';
 import {Layout} from 'antd';
 
-import {HeaderAll} from "../components/HeaderAll";
+import {HeaderAll} from "../components/Customer/Header/HeaderAll";
 import '../css/bookDetail.css'
-import {BooksListTable} from "../components/BooksListTable";
+import {BooksListTable} from "../components/Customer/Books/BooksListTable";
 
 const { Header, Content, Footer } = Layout;
 
