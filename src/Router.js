@@ -74,7 +74,7 @@ export class BasicRoute extends React.Component{
             },
             {
                 element: <OrderDetailView />,
-                path: "/orderDetail",
+                path: "/orderDetail/:orderId",
                 auth: true,
             },
         ]

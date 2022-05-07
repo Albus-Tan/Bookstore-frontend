@@ -14,3 +14,24 @@ export const createOrderFromUserCart = (callback) => {
     const url = `${orderServiceApiUrl}/createOrderFromUserCart`;
     postRequest_v2(url, data, callback);
 }
+
+export const getByOrderId = (order_id, callback) => {
+    const data = {order_id: order_id};
+    const url = `${orderServiceApiUrl}/getByOrderId`;
+    postRequest_v2(url, data, callback);
+}
+
+export const getItemsAndTotalByOrderId = (order_id, callback) => {
+    const data = {order_id: order_id};
+    const url = `${orderServiceApiUrl}/getItemsAndTotalByOrderId`;
+    postRequest_v2(url, data, callback);
+}
+
+export const getOrdersByUserIdAndStatus = (status, callback) => {
+    // TODO !!!!!!!!! check is authed or not
+    const user_id = localStorage.getUserId();
+
+    const data = {status: status, user_id: user_id};
+    const url = `${orderServiceApiUrl}/getByUserIdAndStatus`;
+    postRequest_v2(url, data, callback);
+}

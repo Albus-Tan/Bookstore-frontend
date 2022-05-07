@@ -7,33 +7,30 @@ import {OrderOperation} from "../components/Customer/Orders/OrderOperation";
 import {HeaderAll} from "../components/Customer/Header/HeaderAll";
 
 import '../css/bookDetail.css'
+import {useParams} from "react-router-dom";
 
 const { Header, Content, Footer } = Layout;
 
-export class OrderDetailView extends React.Component{
+export const OrderDetailView = () => {
 
-    constructor(props) {
-        super(props);
-    }
+    const params = useParams();
 
-    render(){
-        return(
-            <Layout className="layout">
-                <Header style={{ position: 'fixed', zIndex: 1, width: '100%'}}>
-                    <HeaderAll />
-                </Header>
-                <Content>
-                    <div id="bookdetail-content" style={{width:"65%"}}>
-                        <Card title="Order Detail" style={{marginTop:"10px"}}>
-                            <OrderInfoCard />
-                            <OrderUserInfoCard />
-                            <OrderItemListCard />
-                            <OrderOperation />
-                        </Card>
-                    </div>
-                </Content>
-                <Footer style={{ textAlign: 'center' }}>Bookstore ©2022 Created by Albus Tan</Footer>
-            </Layout>
-        );
-    }
+    return(
+        <Layout className="layout">
+            <Header style={{ position: 'fixed', zIndex: 1, width: '100%'}}>
+                <HeaderAll />
+            </Header>
+            <Content>
+                <div id="bookdetail-content" style={{width:"65%"}}>
+                    <Card title="Order Detail" style={{marginTop:"10px"}}>
+                        <OrderInfoCard orderId={params.orderId}/>
+                        <OrderUserInfoCard orderId={params.orderId}/>
+                        <OrderItemListCard orderId={params.orderId}/>
+                        <OrderOperation orderId={params.orderId}/>
+                    </Card>
+                </div>
+            </Content>
+            <Footer style={{ textAlign: 'center' }}>Bookstore ©2022 Created by Albus Tan</Footer>
+        </Layout>
+    );
 }

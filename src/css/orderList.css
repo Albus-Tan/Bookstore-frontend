@@ -108,11 +108,12 @@ html,body,#root{
 }
 
 .orderListCard-orderDescription-itemNum{
-    padding-left: 83%;
-    float: left;
+    padding-right: 10%;
+    float: right;
 }
 .orderListCard-orderDescription-itemPrice{
     float: right;
+    width: 80px;
 }
 
 .orderListCard-orderButtons{
@@ -133,7 +134,8 @@ html,body,#root{
     font-size: 20px;
     font-family: "Arial Rounded MT Bold";
     color: orangered;
-    padding-top: 15px;
+    padding-top: 40px;
+    margin-right:-180px;
     float: left;
     text-align: center;
 }

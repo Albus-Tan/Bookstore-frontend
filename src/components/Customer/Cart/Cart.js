@@ -4,10 +4,10 @@ import '../../../css/cart.css'
 import {CartItem} from "./CartItem";
 import { Link } from 'react-router-dom';
 import {getAllBooksInUserCart} from "../../../services/cartService";
+import {createOrderFromUserCart} from "../../../services/orderService";
 
 export class Cart extends React.Component{
 
-    // TODO: num incorrect!!!
     constructor(props) {
         super(props);
         this.state={
@@ -21,7 +21,7 @@ export class Cart extends React.Component{
         this.updateCart();
     }
 
-    updateCart() {
+    updateCart = () => {
         const callback = (data) => {
             console.log("Get Cart data: ", data);
             let total = 0;
@@ -32,6 +32,14 @@ export class Cart extends React.Component{
         }
 
         getAllBooksInUserCart(callback);
+    }
+
+    handleGenerateOrder = () => {
+        const callback = (orderId) => {
+            // pass orderId to cartView, and it will navigate to order detail page
+            this.props.onOrderGenerate(orderId);
+        }
+        createOrderFromUserCart(callback);
     }
 
     render(){
@@ -53,7 +61,7 @@ export class Cart extends React.Component{
                     }
                 </div>
                 <div id="sum_area">
-                    <Link to={'/orderDetail'}><div id="pay">Pay</div></Link>
+                    <div id="pay" onClick={()=>this.handleGenerateOrder()}>Pay</div>
                     <div id="pay_amout">Total: <span id="price_num">{total.toFixed(2)}</span>￥</div>
                 </div>
 

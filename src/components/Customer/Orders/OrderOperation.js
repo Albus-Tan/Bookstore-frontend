@@ -12,6 +12,8 @@ export class OrderOperation extends React.Component{
         }
     }
 
+    //TODO: change order status here from UNPAID to PAID
+
     handlePay = () => {
         let secondsToGo = 3;
         const modal = Modal.success({

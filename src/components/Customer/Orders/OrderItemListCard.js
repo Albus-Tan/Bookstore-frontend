@@ -1,33 +1,51 @@
 import React from 'react';
 import {Card} from "antd";
 import '../../../css/orderList.css'
+import {getItemsAndTotalByOrderId} from "../../../services/orderService";
 
 export class OrderItemListCard extends React.Component{
 
     constructor(props) {
         super(props);
+        this.state={
+            orderItemData: null,
+        }
+    }
+
+    componentDidMount() {
+        const callback = (data) => {
+            this.setState({
+                orderItemData: data,
+            })
+        }
+
+        getItemsAndTotalByOrderId(this.props.orderId, callback);
     }
 
     render(){
-        return(
+        const {orderItemData} = this.state;
+        return (orderItemData == null) ? <Card
+            style={{ marginTop: 16 }}
+            type="inner"
+            title="Items List"
+        /> : (
             <Card
                 style={{ marginTop: 16 }}
                 type="inner"
                 title="Items List"
             >
-                <div className="orderListCard-orderDescription-item">
-                    <div className="orderListCard-orderDescription-itemName">Book name 1</div>
-                    <div className="orderListCard-orderDescription-itemNum"> ×1 </div>
-                    <div className="orderListCard-orderDescription-itemPrice"> ￥200 </div>
-                </div>
-                <div className="orderListCard-orderDescription-item">
-                    <div className="orderListCard-orderDescription-itemName">Book name 1</div>
-                    <div className="orderListCard-orderDescription-itemNum"> ×1 </div>
-                    <div className="orderListCard-orderDescription-itemPrice"> ￥200 </div>
-                </div>
-                <div className="orderListCard-orderTotalNum" style={{float:"right", marginRight:'-2px'}}>
+                {
+                    orderItemData.orderItemResultList.map((item)=>(
+                        <div className="orderListCard-orderDescription-item">
+                            <div className="orderListCard-orderDescription-itemName">{item.name}</div>
+                            <div className="orderListCard-orderDescription-itemPrice"> ￥{item.price.toFixed(2)} </div>
+                            <div className="orderListCard-orderDescription-itemNum"> ×{item.num} </div>
+                        </div>
+                    ))
+                }
+                <div className="orderListCard-orderTotalNum" style={{float:"right", }}>
                     <a style={{color:"black", fontSize:"13px", fontFamily:"Microsoft YaHei", marginRight:'5px'}}>Total:</a>
-                    ￥1200
+                    ￥{orderItemData.totalPrice.toFixed(2)}
                 </div>
             </Card>
         );
