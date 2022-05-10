@@ -21,6 +21,12 @@ export const getByOrderId = (order_id, callback) => {
     postRequest_v2(url, data, callback);
 }
 
+export const getOrderStatusById = (order_id, callback) => {
+    const data = {order_id: order_id};
+    const url = `${orderServiceApiUrl}/getOrderStatusById`;
+    postRequest_v2(url, data, callback);
+}
+
 export const getItemsAndTotalByOrderId = (order_id, callback) => {
     const data = {order_id: order_id};
     const url = `${orderServiceApiUrl}/getItemsAndTotalByOrderId`;
@@ -33,5 +39,11 @@ export const getOrdersByUserIdAndStatus = (status, callback) => {
 
     const data = {status: status, user_id: user_id};
     const url = `${orderServiceApiUrl}/getByUserIdAndStatus`;
+    postRequest_v2(url, data, callback);
+}
+
+export const changeOrderStatusById = (order_id, status, callback) => {
+    const data = {order_id: order_id, status: status};
+    const url = `${orderServiceApiUrl}/changeOrderStatusById`;
     postRequest_v2(url, data, callback);
 }

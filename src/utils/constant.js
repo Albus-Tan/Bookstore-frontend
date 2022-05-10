@@ -1,5 +1,9 @@
 // 设置常量
 
+// 操作返回值
+export const SUCCESS = 0;
+export const FAIL = -1;
+
 // Order status
 // 订单状态
 export const ORDER_STATUS = [

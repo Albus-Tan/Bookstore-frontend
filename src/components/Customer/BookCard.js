@@ -3,7 +3,6 @@ import { EllipsisOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import React from "react";
 
-import imgBook from '../../assets/book.png'
 import {addCartItem} from "../../services/cartService";
 
 const { Meta } = Card;
@@ -14,12 +13,9 @@ export class BookCard extends React.Component {
         super(props);
     }
 
-    navigateToBookDetailPage(){
-
-    }
 
     handleAddToCart(){
-
+        addCartItem( this.props.book.id, 1);
     }
 
     render() {
@@ -34,11 +30,9 @@ export class BookCard extends React.Component {
                         />
                     }
                     actions={[
-                        <Link to="/cart">
-                            <Button type="primary" icon={<ShoppingCartOutlined />} style={{backgroundColor:'#ff6700',borderColor:'#ff6700'}}>
-                                Add cart
-                            </Button>
-                        </Link>,
+                        <Button type="primary" icon={<ShoppingCartOutlined />} style={{backgroundColor:'#ff6700',borderColor:'#ff6700'}} onClick={()=>this.handleAddToCart()}>
+                            Add cart
+                        </Button>,
                         <Link to={`/bookDetail/${book.id}`}>
                             <Button icon={<EllipsisOutlined />}>
                                 Details

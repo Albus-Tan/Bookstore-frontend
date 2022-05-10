@@ -26,7 +26,7 @@ export const OrderDetailView = () => {
                         <OrderInfoCard orderId={params.orderId}/>
                         <OrderUserInfoCard orderId={params.orderId}/>
                         <OrderItemListCard orderId={params.orderId}/>
-                        <OrderOperation orderId={params.orderId}/>
+                        <OrderOperation orderId={params.orderId} status={-1}/>
                     </Card>
                 </div>
             </Content>

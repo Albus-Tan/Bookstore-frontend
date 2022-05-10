@@ -5,6 +5,7 @@ import '../../../css/orderList.css'
 import {EllipsisOutlined, PayCircleOutlined, CheckOutlined, CloseOutlined} from "@ant-design/icons";
 import {getOrdersByUserIdAndStatus} from "../../../services/orderService";
 import {getCodeByText_ORDERSTATUS, getTextByCode_ORDERSTATUS} from "../../../utils/constant";
+import {OrderOperation} from "./OrderOperation";
 
 export class OrderListCard extends React.Component{
 
@@ -19,7 +20,7 @@ export class OrderListCard extends React.Component{
         const callback = (data) => {
             console.log("OrderListCard: ", data);
             this.setState({
-                listData: data,
+                listData: data.reverse(),
             })
         }
 
@@ -44,7 +45,11 @@ export class OrderListCard extends React.Component{
                             key={item.order_id}
                         >
                             <List.Item.Meta
-                                title={<div><div className="orderListCard-orderID">{`OrderID: ${item.order_id}`}</div><div className="orderListCard-orderStatus">{getTextByCode_ORDERSTATUS(item.status)}</div></div>}
+                                title={
+                                <div>
+                                    <div className="orderListCard-orderID">{`OrderID: ${item.order_id}`}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{item.time}</div>
+                                    <div className="orderListCard-orderStatus">{getTextByCode_ORDERSTATUS(item.status)}</div>
+                                </div>}
                                 description={
                                 <div>
                                     <Card size={"small"} style={{background:"#f8f8f8", width:"100%", marginTop:"35px"}}>
@@ -64,39 +69,7 @@ export class OrderListCard extends React.Component{
                                             ￥{item.totalPrice.toFixed(2)}
                                         </div>
                                     </div>
-                                    <div className="orderListCard-orderButtons">
-                                        {
-                                            (item.status === getCodeByText_ORDERSTATUS("Cancelled")) ? <></> :
-                                                <>
-                                                    {
-                                                        (item.status === getCodeByText_ORDERSTATUS("Finish")) ? <></> :
-                                                            <Button icon={<CloseOutlined />} style={{marginRight:'10px'}}>
-                                                                Cancel
-                                                            </Button>
-                                                    }
-                                                    {
-                                                        (item.status === getCodeByText_ORDERSTATUS("To Confirm")) ? <Button type="primary" icon={<CheckOutlined />} style={{marginRight:'10px'}}>
-                                                            Confirm receipt
-                                                        </Button> : <></>
-                                                    }
-                                                    {
-                                                        (item.status === getCodeByText_ORDERSTATUS("Finish")) ? <Button type="primary" disabled icon={<CheckOutlined />} style={{marginRight:'10px'}}>
-                                                            Confirmed
-                                                        </Button> : <></>
-                                                    }
-                                                    {
-                                                        (item.status === getCodeByText_ORDERSTATUS("Unpaid")) ? <Button type="primary" icon={<PayCircleOutlined />} style={{marginRight:'10px'}}>
-                                                            Pay
-                                                        </Button> : <Button type="primary" disabled icon={<PayCircleOutlined />} style={{marginRight:'10px'}}>
-                                                            Paid
-                                                        </Button>
-                                                    }
-                                                </>
-                                        }
-                                        <Button icon={<EllipsisOutlined />}>
-                                            Detail
-                                        </Button>
-                                    </div>
+                                    <OrderOperation status={item.status} orderId={item.order_id}/>
                                 </div>
                             }
                             />

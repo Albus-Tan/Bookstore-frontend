@@ -49,7 +49,7 @@ export class Cart extends React.Component{
                 <div id="car" className="car">
                     <div className="head_row hid">
                         {/*<div className="check left"><i onClick="checkAll()">√</i></div>*/}
-                        <div className="img left">&nbsp;&nbsp;Image</div>
+                        <div className="img left">&nbsp;&nbsp;&nbsp;&nbsp;Image</div>
                         <div className="name left">Book Name</div>
                         <div className="price left" style={{fontSize:"10px"}}>Price</div>
                         <div className="number left">Amount</div>
