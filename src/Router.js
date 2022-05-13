@@ -63,9 +63,11 @@ export class BasicRoute extends React.Component{
                 auth: true,
             },
             {
+                // TODO: change auth！！！
                 element: <UserManageView />,
                 path: "/userManage",
-                auth: true,
+                // auth: true,
+                auth: false,
             },
             {
                 element: <OrderManageView />,

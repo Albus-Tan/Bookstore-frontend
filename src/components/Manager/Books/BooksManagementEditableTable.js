@@ -1,21 +1,11 @@
 import React from 'react';
-import {Table, Input, InputNumber, Form, Typography, Button, Modal, Upload, Image} from 'antd';
-import {DeleteOutlined, PlusOutlined, UploadOutlined} from "@ant-design/icons";
+import {Table, Input, InputNumber, Form, Typography, Button, Modal, Upload, Image, message, Popconfirm} from 'antd';
+import {DeleteOutlined, PlusOutlined, UploadOutlined, ExclamationCircleOutlined} from "@ant-design/icons";
 import {BooksListSearch} from "../../BooksListSearch";
-import bookImg from '../../../assets/book.png'
+import {addBook, getAllBooks, updateBookInfo, deleteBookById} from "../../../services/bookService";
+import {FAIL, SUCCESS} from "../../../utils/constant";
 
-let dataSource = [];
-
-for (let i = 0; i < 100; i++) {
-    dataSource.push({
-        key: i.toString(),
-        name: `Book ${i}`,
-        author: 'Author name',
-        ISBN: 'BK20ei30w0202',
-        cover: <Image width={80} src={bookImg}/>,
-        inventory: `${2*i+1}`,
-    });
-}
+const { confirm } = Modal;
 
 export class EditableCell extends React.Component{
     constructor(props) {
@@ -65,13 +55,41 @@ export class BooksManagementEditableTable extends React.Component{
     constructor(props) {
         super(props);
         this.state={
-            data: dataSource,
+            loading: false,
+
+            data: [],
             editingKey: '',
             selectedRowKeys: [],
             addModalVisible: false,
+
+            deleteConfirmModalVisible: false,
+
+            fromBackend: false,  // record if data get back from backend just now
         }
         this.handleSearchDataChange =
             this.handleSearchDataChange.bind(this);
+    }
+
+    componentDidMount() {
+        this.updateBookData();
+    }
+
+    updateBookData(){
+        const callback =  (data) => {
+            console.log("getAllBooks: ", data);
+            // add properties: key(String), number
+            let key = -1;
+            const newData = data.map((book) => {++key; return {
+                ...book,
+                key: key.toString(),
+                inputNumber: 1,
+                cover: <Image width={150} src={book.image}/>,
+            }});
+            console.log("Add properties: ", newData);
+            this.setState({data:newData, fromBackend: true});
+        };
+
+        getAllBooks(callback);
     }
 
     isEditing = (record) => {
@@ -88,28 +106,58 @@ export class BooksManagementEditableTable extends React.Component{
         this.setState(() => ({ editingKey: '',}));
     };
 
-    handleSave = async (key) => {
+    handleSave = async (record) => {
         try {
             const row = await this.formRef.current.validateFields();
+            console.log("row info: ", row);
             const newData = [...this.state.data];
-            const index = newData.findIndex((item) => key === item.key);
+            const index = newData.findIndex((item) => record.key === item.key);
 
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, { ...item, ...row });
-                this.setState(() => ({ data: newData, editingKey: '', }));
-            } else {
-                newData.push(row);
-                this.setState(() => ({ data: newData, editingKey: '', }));
+            // if (index > -1) {
+            //     const item = newData[index];
+            //     newData.splice(index, 1, { ...item, ...row });
+            //     this.setState(() => ({ editingKey: '', data: newData}));
+            // } else {
+            //     newData.push(row);
+            //     this.setState(() => ({ editingKey: '', data: newData}));
+            // }
+
+            const item = newData[index];
+            console.log("All row info: ", { ...item, ...row });
+
+            const callback = (res) => {
+                if(res === SUCCESS){
+                    message.success("Successfully update book info");
+                } else {
+                    message.error("Update book info FAILED, try again later !");
+                }
+                this.updateBookData();
+                this.setState(() => ({ editingKey: '', }));
             }
+
+            updateBookInfo({ ...item, ...row } ,callback);
+
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
     };
 
-    handleDelete = (key: React.Key) => {
-        const dataSource = [...this.state.data];
-        this.setState({ data: dataSource.filter(item => item.key !== key) });
+    handleDelete = (record) => {
+
+        const id = record.id;
+
+        const callback = (res) => {
+            if(res === SUCCESS){
+                message.success("Successfully delete book, id " + id);
+            } else {
+                message.error("Delete book FAILED, try again later !");
+            }
+            this.updateBookData();
+        }
+
+        deleteBookById(id, callback);
+        // const dataSource = [...this.state.data];
+        // this.setState({ data: dataSource.filter(item => item.key !== record.key) });
     };
 
     onSelectChange = selectedRowKeys => {
@@ -117,50 +165,65 @@ export class BooksManagementEditableTable extends React.Component{
         this.setState({ selectedRowKeys });
     };
 
+
     deleteSelectedBooks = () => {
-        /*this.setState(() => ({ loading: true }));*/
-        // ajax request after empty completing
+        this.showDeleteConfirmModal(false);
+        this.setState(() => ({ loading: true }));
 
         let dataSource = [...this.state.data];
         for(let i = 0; i < this.state.selectedRowKeys.length; i++){
             console.log(this.state.selectedRowKeys[i]);
-            dataSource = dataSource.filter(item => item.key.toString() !== this.state.selectedRowKeys[i])
+            dataSource.map((item) => {
+                if(item.key.toString() === this.state.selectedRowKeys[i]) this.handleDelete(item);
+            })
         }
         this.setState(() => ({
             selectedRowKeys: [],
-            data: dataSource,
+            loading: false,
         }));
-        /*setTimeout(() => {
-            this.setState(() => ({
-                selectedRowKeys: [],
-                loading: false,
-                data: dataSource,
-            }));
-        }, 500);*/
+
     };
 
     handleSearchDataChange(data){
-        this.setState({ data: data, });
+        this.setState({ data: data, fromBackend: false});
     }
 
     showAddModal(isVisible){
         this.setState({ addModalVisible: isVisible, });
     }
 
+    showDeleteConfirmModal(isVisible){
+        this.setState({ deleteConfirmModalVisible: isVisible, });
+    }
+
     handleAdd(){
-        this.formAddRef.current.setFieldsValue({ name: '', inventory: '', author: '', });
-        /*() => {
-            form
-                .validateFields()
-                .then((values) => {
-                    form.resetFields();
-                    onCreate(values);
-                })
-                .catch((info) => {
-                    console.log('Validate Failed:', info);
-                });
-        }*/
-        this.showAddModal(false);
+        this.formAddRef.current.validateFields()
+            .then((values) => {
+                console.log('Validated:', values);
+
+                const addBookCallback = (data) => {
+                    if(data !== FAIL) {
+                        message.success("Successfully add book, id " + data);
+                        this.updateBookData();
+                    }
+                    else message.error("Add book FAILED, try again later !");
+                }
+
+                const data = {
+                    ...values,
+                    image: "",
+                }
+
+                console.log('Validated processed data:', data);
+
+                addBook(data, addBookCallback);
+
+                this.formAddRef.current.resetFields();
+                this.showAddModal(false);
+            })
+            .catch((info) => {
+                console.log('Validate Failed:', info);
+            });
     }
 
     handleCancelAdd(){
@@ -168,7 +231,7 @@ export class BooksManagementEditableTable extends React.Component{
     }
 
     render(){
-        const { selectedRowKeys, data } = this.state;
+        const { selectedRowKeys, data, fromBackend, loading } = this.state;
         let columns =  [
             {
                 title: 'Book Name',
@@ -193,15 +256,22 @@ export class BooksManagementEditableTable extends React.Component{
             },
             {
                 title: 'ISBN',
-                dataIndex: 'ISBN',
-                width: '20%',
+                dataIndex: 'isbn',
+                width: '10%',
                 editable: true,
                 inputType: 'text',
             },
             {
                 title: 'Inventory',
                 dataIndex: 'inventory',
-                width: '10%',
+                width: '8%',
+                editable: true,
+                inputType: 'number',
+            },
+            {
+                title: 'Price',
+                dataIndex: 'price',
+                width: '8%',
                 editable: true,
                 inputType: 'number',
             },
@@ -212,7 +282,7 @@ export class BooksManagementEditableTable extends React.Component{
                     if(this.isEditing(record)){
                         return (
                             <span>
-                                <Typography.Link onClick={() => this.handleSave(record.key)} style={{marginRight: 8,}}>Save</Typography.Link>
+                                <Typography.Link onClick={() => this.handleSave(record)} style={{marginRight: 8,}}>Save</Typography.Link>
                                 <Typography.Link onClick={() => this.handleCancel()} style={{marginRight: 8,}}>Cancel</Typography.Link>
                             </span>
                         );
@@ -220,7 +290,16 @@ export class BooksManagementEditableTable extends React.Component{
                         return (
                             <span>
                                 <Typography.Link disabled={this.state.editingKey !== ''} style={{marginRight: 8,}} onClick={() => this.handleEdit(record)}>Edit</Typography.Link>
-                                <Typography.Link disabled={this.state.editingKey !== ''} style={{marginRight: 8,}} onClick={() => this.handleDelete(record.key)}>Delete</Typography.Link>
+                                <Typography.Link disabled={this.state.editingKey !== ''} style={{marginRight: 8,}} >
+                                    <Popconfirm
+                                        title="Are you sure to delete this book ?"
+                                        onConfirm={() => this.handleDelete(record)}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
+                                    Delete
+                                    </Popconfirm>
+                                </Typography.Link>
                             </span>
                         );
                     }
@@ -264,14 +343,15 @@ export class BooksManagementEditableTable extends React.Component{
                             ref={this.formAddRef}
                             layout="vertical"
                             name="form_in_modal"
+                            preserve={false}
                         >
-                            <Form.Item name={columns[0].title} label={columns[0].title} rules={[{required: true, message: 'Please input ' + columns[0].title ,},]}>
+                            <Form.Item name="name" label={columns[0].title} rules={[{required: true, message: 'Please input ' + columns[0].title ,},]}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item name={columns[1].title} label={columns[1].title} rules={[{required: true, message: 'Please input ' + columns[1].title ,},]}>
+                            <Form.Item name="author" label={columns[1].title} rules={[{required: true, message: 'Please input ' + columns[1].title ,},]}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item name={columns[3].title} label={columns[3].title} rules={[{required: true, message: 'Please input ' + columns[3].title ,},]}>
+                            <Form.Item name="isbn" label={columns[3].title} rules={[{required: true, message: 'Please input ' + columns[3].title ,},]}>
                                 <Input />
                             </Form.Item>
                             <Form.Item name={columns[2].title} label={columns[2].title} rules={[{required: false, message: 'Please input ' + columns[2].title ,},]}>
@@ -283,19 +363,40 @@ export class BooksManagementEditableTable extends React.Component{
                                     <Button icon={<UploadOutlined />}>Click to upload cover</Button>
                                 </Upload>
                             </Form.Item>
-                            <Form.Item name={columns[4].title} label={columns[4].title} style={{width:'100px'}} rules={[{required: true, message: 'Please input ' + columns[4].title ,},]}>
+                            <Form.Item name="inventory" label={columns[4].title} style={{width:'100px'}} rules={[{required: true, message: 'Please input ' + columns[4].title ,},]}>
                                 <Input type='number'/>
+                            </Form.Item>
+                            <Form.Item name="price" label="Price" style={{width:'100px'}} rules={[{required: true, message: 'Please input price',},]}>
+                                <Input type='number'/>
+                            </Form.Item>
+                            <Form.Item name="description" label="Description" rules={[{required: false, message: 'Please input description' ,},]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="type" label="Type" rules={[{required: false, message: 'Please input type' ,},]}>
+                                <Input />
                             </Form.Item>
                         </Form>
                     </Modal>
-                    <Button type="danger" onClick={() => this.deleteSelectedBooks()} icon={<DeleteOutlined />} disabled={!hasSelected} /*loading={loading}*/ style={{marginLeft:10}}>
+                    <Button type="danger" onClick={()=>this.showDeleteConfirmModal(true)} icon={<DeleteOutlined />} disabled={!hasSelected}  loading={loading} style={{marginLeft:10}}>
                         Delete
                     </Button>
+                    <Modal
+                        visible={this.state.deleteConfirmModalVisible}
+                        title='Are you sure delete all books selected ?'
+                        okText='Yes'
+                        okType='danger'
+                        cancelText='No'
+                        onOk={() => this.deleteSelectedBooks()}
+                        onCancel={() => this.showDeleteConfirmModal(false)}
+                        maskClosable={false}
+                    >
+                        This operation can not be undo !
+                    </Modal>
                     <span style={{ marginLeft: 10 }}>
                         {hasSelected ? `Selected ${selectedRowKeys.length} items` : ''}
                     </span>
                 </div>
-                <BooksListSearch dataSource={data} onSearchDataChange={this.handleSearchDataChange}/>
+                <BooksListSearch dataSource={data} fromBackend={fromBackend} onSearchDataChange={this.handleSearchDataChange}/>
                 <Form ref={this.formRef} component={false}>
                     <Table components={{ body: { cell: EditableCell},}} bordered dataSource={data} columns={mergedColumns} rowKey={data.key} rowSelection={rowSelection}/>
                 </Form>

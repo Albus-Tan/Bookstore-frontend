@@ -9,6 +9,17 @@ export const addBook = (data, callback) => {
     postRequest_v2(url, data, callback);
 };
 
+export const deleteBookById = (id, callback) => {
+    const data = {id: id};
+    const url = `${bookServiceApiUrl}/delete`;
+    postRequest_v2(url, data, callback);
+};
+
+export const updateBookInfo = (data, callback) => {
+    const url = `${bookServiceApiUrl}/update`;
+    postRequest_v2(url, data, callback);
+};
+
 export const getAllBooks = (callback) => {
     const url = `${bookServiceApiUrl}/getAll`;
     postRequestNoPara(url, callback);
