@@ -1,5 +1,6 @@
 import React from 'react';
 import {List, Avatar, Tag, Button} from "antd";
+import {getAllUsers} from "../../../services/userService";
 
 
 let data = [];
@@ -25,6 +26,15 @@ export class UserManagement extends React.Component{
         this.state = {
             data: data,
         };
+    }
+
+    updateUserData(){
+        const callback = (data) => {
+            this.setState({
+                data: data,
+            })
+        }
+        getAllUsers(callback);
     }
 
     getStatusTag = (status) => {

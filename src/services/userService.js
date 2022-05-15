@@ -1,7 +1,7 @@
 import config from '../utils/config';
 import localStorage from "../utils/localStorage";
 import {message} from "antd";
-import {postRequest_v2} from "../utils/ajax";
+import {postRequest_v2, postRequestNoPara} from "../utils/ajax";
 
 const root = "/user";
 const userServiceApiUrl = config.apiUrl + root;
@@ -31,3 +31,8 @@ export const login = (username, password, oriCallback) => {
 
     postRequest_v2(url, data, callback);
 };
+
+export const getAllUsers = (callback) => {
+    const url = `${userServiceApiUrl}/getAll`;
+    postRequestNoPara(url,callback);
+}

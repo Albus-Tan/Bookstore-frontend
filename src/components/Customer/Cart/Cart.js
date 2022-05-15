@@ -3,6 +3,7 @@ import '../../../css/cart.css'
 
 import {CartItem} from "./CartItem";
 import { Link } from 'react-router-dom';
+import {Decimal} from 'decimal.js'
 import {getAllBooksInUserCart} from "../../../services/cartService";
 import {createOrderFromUserCart} from "../../../services/orderService";
 
@@ -24,9 +25,10 @@ export class Cart extends React.Component{
     updateCart = () => {
         const callback = (data) => {
             console.log("Get Cart data: ", data);
-            let total = 0;
+            let total = new Decimal(0);
             data.map((item) => {
-                total = total + Number((item.num * item.book.price).toFixed(2));
+                let p = new Decimal(item.num).mul(new Decimal(item.book.price))
+                total = total.add(p);
             })
             this.setState({cartData: data, total: total,});
         }
