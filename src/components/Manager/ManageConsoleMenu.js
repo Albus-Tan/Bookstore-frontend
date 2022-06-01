@@ -24,8 +24,16 @@ export class ManageConsoleMenu extends React.Component {
                     <Link to="/userManage">User Management</Link>
                 </Menu.Item>
                 <SubMenu key="sub1" icon={<PieChartOutlined />} title="Statistic analysis">
-                    <Menu.Item key="3" icon={<ReadOutlined />}>Book sales</Menu.Item>
-                    <Menu.Item key="4" icon={<UserOutlined />}>User consume</Menu.Item>
+                    <Menu.Item key="3" icon={<ReadOutlined />}>
+                        <Link to="/analysisBookSales">
+                            Book sales
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="4" icon={<UserOutlined />}>
+                        <Link to="/analysisUserConsume">
+                            User consume
+                        </Link>
+                    </Menu.Item>
                 </SubMenu>
                 <Menu.Item key="5" icon={<ContainerOutlined />}>
                     <Link to="/orderManage">Orders Management</Link>

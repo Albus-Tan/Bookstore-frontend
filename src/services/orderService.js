@@ -1,9 +1,55 @@
 import localStorage from "../utils/localStorage";
 import config from "../utils/config";
-import {postRequest_v2} from "../utils/ajax";
+import {postRequest_v2, postRequestNoPara} from "../utils/ajax";
+import moment from "moment";
 
 const root = "/order";
 const orderServiceApiUrl = config.apiUrl + root;
+
+export const filterOrderByTimeRange = (data, dateRange) => {
+    if(dateRange === [ "", "" ]) return data;
+    if(dateRange[0] === "" && dateRange[1] === "") return data;
+    if(dateRange[0] === "") {
+        const end = moment(dateRange[1]).add(1,'days');
+        console.log(end);
+        const newData =  data.filter((or)=>{
+            if(moment(or.time).isBefore(end)) return or;
+        })
+        console.log("filterOrderByTimeRange ",newData);
+        return newData;
+    }
+    if(dateRange[1] === "") {
+        const start = moment(dateRange[0]);
+        console.log(start);
+        const newData =  data.filter((or)=>{
+            if(moment(or.time).isAfter(start)) return or;
+        })
+        console.log("filterOrderByTimeRange ",newData);
+        return newData;
+    }
+    const start = moment(dateRange[0]);
+    const end = moment(dateRange[1]).add(1,'days');
+    console.log(start,end);
+    const newData =  data.filter((or)=>{
+        if(moment(or.time).isBetween(start,end)) return or;
+    })
+    console.log("filterOrderByTimeRange ",newData);
+    return newData;
+}
+
+export const filterOrderByBookName = (data, name) => {
+    if(name === "") return data;
+    const needle = name.toLowerCase();
+    const newData =  data.filter((or)=>{
+        let hasName = false;
+        or.orderItemResultList.map((oi)=>{
+            if(oi.name.toString().toLowerCase().indexOf(needle) > -1) hasName = true;
+        })
+        if(hasName) return or;
+    })
+    console.log("filterOrderByBookName ",newData);
+    return newData;
+}
 
 export const createOrderFromUserCart = (callback) => {
     // TODO !!!!!!!!! check is authed or not
@@ -46,4 +92,24 @@ export const changeOrderStatusById = (order_id, status, callback) => {
     const data = {order_id: order_id, status: status};
     const url = `${orderServiceApiUrl}/changeOrderStatusById`;
     postRequest_v2(url, data, callback);
+}
+
+export const getAllOrders = (callback) => {
+    const url = `${orderServiceApiUrl}/getAllOrders`;
+    postRequestNoPara(url, callback);
+}
+
+export const getAllOrdersWithItems = (callback) => {
+    const url = `${orderServiceApiUrl}/getAllOrdersWithItems`;
+    postRequestNoPara(url, callback);
+}
+
+export const analysisBookSales = (callback) => {
+    const url = `${orderServiceApiUrl}/analysisBookSales`;
+    postRequestNoPara(url, callback);
+}
+
+export const analysisUserConsume = (callback) => {
+    const url = `${orderServiceApiUrl}/analysisUserConsume`;
+    postRequestNoPara(url, callback);
 }

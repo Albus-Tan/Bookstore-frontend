@@ -3,7 +3,11 @@ import {List, Card, Button} from 'antd';
 
 import '../../../css/orderList.css'
 import {EllipsisOutlined, PayCircleOutlined, CheckOutlined, CloseOutlined} from "@ant-design/icons";
-import {getOrdersByUserIdAndStatus} from "../../../services/orderService";
+import {
+    filterOrderByBookName,
+    filterOrderByTimeRange,
+    getOrdersByUserIdAndStatus
+} from "../../../services/orderService";
 import {getCodeByText_ORDERSTATUS, getTextByCode_ORDERSTATUS} from "../../../utils/constant";
 import {OrderOperation} from "./OrderOperation";
 
@@ -29,6 +33,7 @@ export class OrderListCard extends React.Component{
 
     render() {
         const {listData} = this.state;
+        const {searchName,dateRange} = this.props;
         return (listData == null) ? (<></>) : (
             <div style={{marginTop:"10px", height:"100%",width:"100%"}}>
                 <List
@@ -39,7 +44,7 @@ export class OrderListCard extends React.Component{
                         },
                         pageSize: 3,
                     }}
-                    dataSource={listData}
+                    dataSource={filterOrderByTimeRange(filterOrderByBookName(listData,searchName),dateRange)}
                     renderItem={item => (
                         <List.Item
                             key={item.order_id}

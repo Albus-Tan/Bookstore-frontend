@@ -1,6 +1,7 @@
 import React from 'react';
 import {List, Avatar, Tag, Button} from "antd";
-import {getAllUsers} from "../../../services/userService";
+import {getAllUsers, modifyUserStatusById} from "../../../services/userService";
+import {SUCCESS, USER_STATUS_BANNED, USER_STATUS_NORMAL} from "../../../utils/constant";
 
 
 let data = [];
@@ -11,12 +12,12 @@ for (let i = 0; i < 100; i++) {
         key: i.toString(),
         name: `User ${i}`,
         description: "I am a user of the bookstore",
-        status: 'normal'
+        status: USER_STATUS_NORMAL
     });
 }
 
-data[1].status = 'banned';
-data[3].status = 'banned';
+data[1].status = USER_STATUS_BANNED;
+data[3].status = USER_STATUS_BANNED;
 
 
 export class UserManagement extends React.Component{
@@ -24,52 +25,67 @@ export class UserManagement extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            data: data,
+            data: null,
         };
+    }
+
+    componentDidMount() {
+        this.updateUserData();
+    }
+
+    modifyStatus(user_id, user_status){
+        const callback = (res) => {
+            if(res === SUCCESS) this.updateUserData();
+        }
+
+        modifyUserStatusById(user_id, user_status, callback);
     }
 
     updateUserData(){
         const callback = (data) => {
+            const newData = data.map((item)=>({
+                    ...item,
+                    avatar: <Avatar src="https://joeschmoe.io/api/v1/random" />,
+                    key: item.user_id.toString(),
+                    description: "I am a user of the bookstore",
+            }))
             this.setState({
-                data: data,
+                data: newData,
             })
         }
         getAllUsers(callback);
     }
 
     getStatusTag = (status) => {
-        return status !== 'normal' ? (<Tag color="error" style={{marginLeft: 30}}>Disabled</Tag>) : (<Tag color="success" style={{marginLeft: 30}}>Normal</Tag>);
+        return status !== USER_STATUS_NORMAL ? (<Tag color="error" style={{marginLeft: 30}}>Disabled</Tag>) : (<Tag color="success" style={{marginLeft: 30}}>Normal</Tag>);
     };
 
     getStatusOperation = (status, key) => {
-        return status !== 'normal' ? (<Button type="link" style={{marginLeft: 34}} onClick={()=>this.handleUnbanClicked(key)}>Unban</Button>)
+        return status !== USER_STATUS_NORMAL ? (<Button type="link" style={{marginLeft: 34}} onClick={()=>this.handleUnbanClicked(key)}>Unban</Button>)
             : (<Button type="link" style={{marginLeft: 30}} onClick={()=>this.handleDisableClicked(key)}>Disable</Button>);
     };
 
     handleDisableClicked = (key) => {
         const data = [...this.state.data];
-        let newData = data.map((item)=>{
+        data.map((item)=>{
             if(item.key.toString() === key.toString()){
-                item.status = 'banned'
-                return item;
-            } else return item;
+                this.modifyStatus(item.user_id, USER_STATUS_BANNED);
+            }
         });
-        this.setState({data:newData});
     }
 
     handleUnbanClicked = (key) => {
         const data = [...this.state.data];
-        let newData = data.map((item)=>{
+        data.map((item)=>{
             if(item.key.toString() === key.toString()){
-                item.status = 'normal'
-                return item;
-            } else return item;
+                this.modifyStatus(item.user_id, USER_STATUS_NORMAL);
+            }
         });
-        this.setState({data:newData});
     }
 
     render(){
-        return(
+        const {data} = this.state;
+        return (data === null) ? <></> : (
             <div>
                 <List
                     style={{paddingBottom:30, paddingTop:5}}
@@ -83,8 +99,8 @@ export class UserManagement extends React.Component{
                             title={item.name}
                             description={item.description}
                             />
-                            {this.getStatusTag(item.status)}
-                            {this.getStatusOperation(item.status, item.key)}
+                            {this.getStatusTag(item.userAuth.user_status)}
+                            {this.getStatusOperation(item.userAuth.user_status, item.key)}
                         </List.Item>
                     )}
                 />

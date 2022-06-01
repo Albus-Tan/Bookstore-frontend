@@ -3,26 +3,15 @@ import {Table, Button, Tag, DatePicker, notification, Popconfirm } from 'antd';
 import {EllipsisOutlined, QuestionCircleOutlined,CheckCircleOutlined,CloseOutlined, SyncOutlined,DeliveredProcedureOutlined,CloseCircleOutlined} from "@ant-design/icons";
 import {BooksListSearch} from "../../BooksListSearch";
 import {Link} from "react-router-dom";
+import {
+    DATE_FORMAT,
+    getCodeByText_ORDERSTATUS,
+    getTagByCode_ORDERSTATUS,
+    getTextByCode_ORDERSTATUS
+} from "../../../utils/constant";
+import {filterOrderByTimeRange, getAllOrders, getAllOrdersWithItems} from "../../../services/orderService";
 
 const { RangePicker } = DatePicker;
-
-let dataSource = [];
-
-for (let i = 0; i < 100; i++) {
-    dataSource.push({
-        key: i.toString(),
-        orderID: `OD20ep0882sd${i}`,
-        status: 'processing',
-        time: `2022/3/26`,
-        num: i+1,
-        name: 'Book 0; Book 1; Book 2;',
-        statusTag: '',
-    });
-}
-
-dataSource[2].status = 'complete';
-dataSource[3].status = 'delivering';
-dataSource[4].status = 'cancel';
 
 export class OrdersManagement extends React.Component{
     constructor(props) {
@@ -30,8 +19,8 @@ export class OrdersManagement extends React.Component{
         this.columns =  [
             {
                 title: 'Order ID',
-                dataIndex: 'orderID',
-                width: '18%',
+                dataIndex: 'order_id',
+                width: '7%',
             },
             {
                 title: 'Status',
@@ -45,7 +34,7 @@ export class OrdersManagement extends React.Component{
             },
             {
                 title: 'Book Num',
-                dataIndex: 'num',
+                dataIndex: 'totalNum',
                 width: '7%',
             },
             {
@@ -72,19 +61,24 @@ export class OrdersManagement extends React.Component{
             },
         ];
         this.state={
-            data: dataSource,
+            data: null,
+            dateString: [ "", "" ],
         }
         this.handleSearchDataChange =
             this.handleSearchDataChange.bind(this);
     }
 
+    componentDidMount() {
+        this.updateOrderData();
+    }
 
     handleCancelClicked = (key) => {
         const dataSource = [...this.state.data];
         let newData = dataSource.filter((item) => {
             if(item.key === key){
                 let newItem = item;
-                newItem.status = 'cancel';
+                // TODO
+                newItem.status = getCodeByText_ORDERSTATUS("Cancelled");
                 return newItem;
             }
             return item;
@@ -102,44 +96,56 @@ export class OrdersManagement extends React.Component{
 
     };
 
-    onSelectChange = selectedRowKeys => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
-        this.setState({ selectedRowKeys });
-    };
+    updateOrderData = () => {
+        const callback = (data) => {
+            console.log("all orders", data);
+            let i = -1;
+            const processedData = data.map((o)=>{
+                const oi_name = o.orderItemResultList.map((oi)=>oi.name);
+                ++i;
+                return {
+                    key: i.toString(),
+                    name: oi_name.join('；'),
+                    statusTag: getTagByCode_ORDERSTATUS(o.status),
+                    ...o,
+                }
+            });
+
+            console.log("processedData", processedData);
+            this.setState({
+                data:processedData.reverse(),
+            })
+        }
+
+        getAllOrdersWithItems(callback);
+    }
 
     handleSearchDataChange(data){
         this.setState({ data: data, });
     }
 
+    onDateRangeChange = (value, dateString) => {
+        console.log('Selected Time: ', value);
+        console.log('Formatted Selected Time: ', dateString);
+        this.setState({dateString:dateString});
+    };
+
     render(){
         const columns = this.columns;
-        const data = [...this.state.data];
-        let processedData = data.map((item) => {
-            let newItem = item;
-            if (item.status === 'delivering') {
-                newItem.statusTag = <Tag icon={<DeliveredProcedureOutlined />} color="blue">Delivering</Tag>;
-                return newItem;
-            }
-            if (item.status === 'complete') {
-                newItem.statusTag = <Tag icon={<CheckCircleOutlined />} color="green">Completed</Tag>;
-                return newItem;
-            }
-            if (item.status === 'processing') {
-                newItem.statusTag = <Tag icon={<SyncOutlined spin />} color="processing">Processing</Tag>;
-                return newItem;
-            }
-            if (item.status === 'cancel') {
-                newItem.statusTag = <Tag icon={<CloseCircleOutlined />} color="error">Cancelled</Tag>;
-                return newItem;
-            }
-        });
+        if(this.state.data === null) return <></>;
+        const {data} = this.state;
+        const processedData = filterOrderByTimeRange(data,this.state.dateString);
         console.log(data);
         return (
             <div>
                 <div style={{ marginBottom: 16, paddingTop: 15, float:"left" }}>
-                    <RangePicker />
+                    <RangePicker
+                        format={DATE_FORMAT}
+                        allowEmpty={[true,true]}
+                        onChange={this.onDateRangeChange.bind(this)}
+                    />
                 </div>
-                <BooksListSearch dataSource={processedData} onSearchDataChange={this.handleSearchDataChange}/>
+                <BooksListSearch dataSource={data} onSearchDataChange={this.handleSearchDataChange}/>
                 <Table bordered dataSource={processedData} columns={columns} rowKey={processedData.key}/>
             </div>
 

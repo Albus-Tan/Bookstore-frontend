@@ -5,18 +5,26 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 import '../../css/login.css'
 import * as userService from '../../services/userService'
+import {CUSTOMER, MANAGER} from "../../utils/constant";
 
 export const LoginForm = ({onLoginClicked}) => {
 
     let navigate = useNavigate();
 
-    const loginCallback = (isAuthed) => {
+    const loginCallback = (isAuthed, type) => {
         console.log("LoginForm isAuthed: " , isAuthed);
         if(isAuthed) {
             // 登陆成功，回传状态
             onLoginClicked(isAuthed);
-            // 跳转回首页
-            navigate("/");
+            if(type === CUSTOMER){
+                // 跳转回首页
+                navigate("/");
+                return;
+            }
+            if(type === MANAGER){
+                // 跳转管理页面首页
+                navigate("/bookManage");
+            }
         }
     }
 
