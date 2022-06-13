@@ -2,6 +2,7 @@ import localStorage from "../utils/localStorage";
 import config from "../utils/config";
 import {postRequest_v2, postRequestNoPara} from "../utils/ajax";
 import moment from "moment";
+import {SECOND_SUF} from "../utils/constant";
 
 const root = "/order";
 const orderServiceApiUrl = config.apiUrl + root;
@@ -104,12 +105,24 @@ export const getAllOrdersWithItems = (callback) => {
     postRequestNoPara(url, callback);
 }
 
-export const analysisBookSales = (callback) => {
+export const analysisBookSales = (startDate, endDate, callback) => {
     const url = `${orderServiceApiUrl}/analysisBookSales`;
-    postRequestNoPara(url, callback);
+    console.log("analysisBookSales startDate, endDate",startDate, endDate);
+    if(startDate === "" && endDate === ""){
+        postRequestNoPara(url, callback);
+    } else {
+        const data = {startDate:startDate + SECOND_SUF, endDate:endDate + SECOND_SUF};
+        postRequest_v2(url, data, callback);
+    }
 }
 
-export const analysisUserConsume = (callback) => {
+export const analysisUserConsume = (startDate, endDate, callback) => {
     const url = `${orderServiceApiUrl}/analysisUserConsume`;
-    postRequestNoPara(url, callback);
+    console.log("analysisUserConsume startDate, endDate",startDate, endDate);
+    if(startDate === "" && endDate === ""){
+        postRequestNoPara(url, callback);
+    } else {
+        const data = {startDate:startDate + SECOND_SUF, endDate:endDate + SECOND_SUF};
+        postRequest_v2(url, data, callback);
+    }
 }

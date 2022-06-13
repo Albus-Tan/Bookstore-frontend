@@ -57,3 +57,4 @@ export const  CUSTOMER = 0;
 
 // 时间格式
 export const DATE_FORMAT = "YYYY-MM-DD"
+export const SECOND_SUF = " 00:00:00"

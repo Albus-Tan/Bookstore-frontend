@@ -1,7 +1,10 @@
 import React from 'react';
-import {Card, Col, List, Row, Statistic, Avatar} from "antd";
+import {Card, Col, List, Row, Statistic, Avatar, Divider, DatePicker} from "antd";
 import {analysisUserConsume} from "../../../services/orderService";
-import {Link} from "react-router-dom";
+import {DATE_FORMAT} from "../../../utils/constant";
+
+const { RangePicker } = DatePicker;
+
 
 export class AnalysisUserConsume extends React.Component{
 
@@ -14,6 +17,10 @@ export class AnalysisUserConsume extends React.Component{
     }
 
     componentDidMount() {
+        this.updateData(this.state.dateString)
+    }
+
+    updateData(dateString){
         const callback = (data) => {
             // data.sort((a, b) => {  // tot price
             //     return a.total_price < b.total_price ? 1 : -1;
@@ -25,13 +32,31 @@ export class AnalysisUserConsume extends React.Component{
             console.log("AnalysisUserConsume:",data);
             this.setState({data:data.map((b)=>{++i; return {...b,rank:i,} })})
         }
-        analysisUserConsume(callback);
+        // TODO 传入日期设置为后一天 以包含end当日
+        analysisUserConsume(dateString[0], dateString[1], callback);
     }
+
+    onDateRangeChange = (value, dateString) => {
+        console.log('Selected Time: ', value);
+        console.log('Formatted Selected Time: ', dateString);
+        this.updateData(dateString);
+        this.setState({dateString:dateString});
+    };
 
     render(){
         const {data} = this.state;
         return (data === null) ? (<></>) : (
             <div>
+                <div  style={{clear:"both", paddingTop:"20px",paddingLeft:"20px",paddingBottom:"5px",}}>
+                    <h1 style={{textAlign:"left", fontSize:"28px",fontFamily:"Arial",fontWeight:"Bold", float:'left'}}>User Consume List</h1>
+                    <RangePicker
+                        format={DATE_FORMAT}
+                        allowEmpty={[false,false]}
+                        onChange={this.onDateRangeChange.bind(this)}
+                        style={{marginLeft:"70px",marginTop:'2px'}}
+                    />
+                </div>
+                <Divider />
                 <List
                     style={{paddingBottom:30, paddingTop:5}}
                     pagination
