@@ -12,7 +12,8 @@ export class HeadBar extends React.Component {
                         <Link to="/books"><bar_li><bar_h2>Books</bar_h2></bar_li></Link>
                         <Link to="/cart"><bar_li><bar_h2>Cart</bar_h2></bar_li></Link>
                         <Link to="/orderList"><bar_li><bar_h2>Orders</bar_h2></bar_li></Link>
-                        <Link to="/login"><bar_li style={{float : 'right'}}><bar_h2>Profile</bar_h2></bar_li></Link>
+                        <Link to="/analysis"><bar_li><bar_h2>Analysis</bar_h2></bar_li></Link>
+                        <Link to="/login"><bar_li style={{float : 'right'}}><bar_h2>Log out</bar_h2></bar_li></Link>
                     </bar_ul>
                 </div>
             </div>

@@ -14,6 +14,7 @@ import {OrderDetailView} from "./view/OrderDetailView";
 import {AnalysisUserConsume} from "./components/Manager/Analysis/AnalysisUserConsume";
 import {AnalysisUserConsumeView} from "./view/AnalysisUserConsumeView";
 import {AnalysisBookSalesView} from "./view/AnalysisBookSalesView";
+import {BookConsumeAnalysisView} from "./view/BookConsumeAnalysisView";
 
 export class BasicRoute extends React.Component{
 
@@ -61,12 +62,16 @@ export class BasicRoute extends React.Component{
                 auth: true,
             },
             {
+                element: <BookConsumeAnalysisView />,
+                path: "/analysis",
+                auth: true,
+            },
+            {
                 element: <BookManageView />,
                 path: "/bookManage",
                 auth: true,
             },
             {
-                // TODO: change auth！！！
                 element: <UserManageView />,
                 path: "/userManage",
                 auth: true,
