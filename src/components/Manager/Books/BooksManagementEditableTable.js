@@ -4,6 +4,7 @@ import {DeleteOutlined, PlusOutlined, UploadOutlined, ExclamationCircleOutlined}
 import {BooksListSearch} from "../../BooksListSearch";
 import {addBook, getAllBooks, updateBookInfo, deleteBookById} from "../../../services/bookService";
 import {FAIL, SUCCESS} from "../../../utils/constant";
+import config from "../../../utils/config";
 
 const { confirm } = Modal;
 
@@ -356,7 +357,7 @@ export class BooksManagementEditableTable extends React.Component{
                             </Form.Item>
                             <Form.Item name={columns[2].title} label={columns[2].title} rules={[{required: false, message: 'Please input ' + columns[2].title ,},]}>
                                 <Upload
-                                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                    action={config.imageUploadUrl}
                                     listType="picture"
                                     maxCount={1}
                                 >

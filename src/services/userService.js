@@ -2,13 +2,15 @@ import config from '../utils/config';
 import localStorage from "../utils/localStorage";
 import {message} from "antd";
 import {postRequest_v2, postRequestNoPara} from "../utils/ajax";
-import {USER_STATUS_BANNED, USER_STATUS_NORMAL} from "../utils/constant";
+import {CUSTOMER, USER_STATUS_BANNED, USER_STATUS_NORMAL} from "../utils/constant";
 
 const root = "/user";
 const userServiceApiUrl = config.apiUrl + root;
 
-export const register = (data, callback) => {
+export const register = (_data, callback) => {
     const url = `${userServiceApiUrl}/register`;
+    const data = {user_type:CUSTOMER, ..._data};
+    console.log("register data",data);
     postRequest_v2(url, data, callback);
 };
 

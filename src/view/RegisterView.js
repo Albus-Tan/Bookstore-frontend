@@ -4,11 +4,14 @@ import {
     Input,
     Select,
     Checkbox,
-    Button
+    Button, message
 } from 'antd';
 
 import '../css/register.css'
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import {register} from "../services/userService";
+import {ALREADY_EXIST, USER_STATUS_BANNED, USER_STATUS_NORMAL} from "../utils/constant";
+import localStorage from "../utils/localStorage";
 const { Option } = Select;
 
 const formItemLayout = {
@@ -43,10 +46,32 @@ const tailFormItemLayout = {
 };
 
 const RegistrationForm = () => {
+    let navigate = useNavigate();
+
     const [form] = Form.useForm();
 
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
+
+        const callback = (res) => {
+            console.log('Received register callback: ', res);
+            if(res === ALREADY_EXIST){
+                message.error("Username already exist ! Register Failed");
+                return;
+            }
+            if(res >= 0) {
+                message.success("Register Success");
+                navigate("/login");
+                return;
+            }
+            else{
+                // login fail
+                message.error("Register Failed !");
+                return;
+            }
+        }
+
+        register(values,callback);
     };
 
     const prefixSelector = (
@@ -177,7 +202,8 @@ const RegistrationForm = () => {
             </Form.Item>
             <Form.Item {...tailFormItemLayout}>
                 <Button type="primary" htmlType="submit" style={{width:"100%"}}>
-                    <Link to="/login">Register</Link>
+                    Register
+                    {/*<Link to="/login"></Link>*/}
                 </Button>
             </Form.Item>
         </Form>
