@@ -61,3 +61,6 @@ export const SECOND_SUF = " 00:00:00"
 
 // 注册
 export const ALREADY_EXIST = -2;
+
+// 未登录
+export const NOT_LOGIN = -3;

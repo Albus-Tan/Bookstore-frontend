@@ -5,11 +5,10 @@ import {notification} from "antd";
 import {CheckCircleOutlined} from "@ant-design/icons";
 import React from "react";
 import localStorage from "../utils/localStorage";
+import {NOT_LOGIN} from "../utils/constant";
 
 const root = "/cart";
 const cartServiceApiUrl = config.apiUrl + root;
-
-
 
 export const addCartItem = (book_id, num) => {
 
@@ -26,8 +25,8 @@ export const addCartItem = (book_id, num) => {
         if(data >= 0) openAddSuccessNotification(data);
     }
 
-    // TODO !!!!!!!!! check is authed or not
     const user_id = localStorage.getUserId();
+    if(user_id === NOT_LOGIN) return;
     console.log("addCartItem uid: ", user_id);
 
     const data = {user_id: user_id, book_id: book_id, num: num};
@@ -37,8 +36,9 @@ export const addCartItem = (book_id, num) => {
 
 export const deleteCartItem = (book_id, callback) => {
 
-    // TODO !!!!!!!!! check is authed or not
     const user_id = localStorage.getUserId();
+    if(user_id === NOT_LOGIN) return;
+
     console.log("deleteCartItem uid: ", user_id);
 
     const data = {user_id: user_id, book_id: book_id};
@@ -48,8 +48,8 @@ export const deleteCartItem = (book_id, callback) => {
 
 export const modifyCartItemNum = (book_id, num, callback) => {
 
-    // TODO !!!!!!!!! check is authed or not
     const user_id = localStorage.getUserId();
+    if(user_id === NOT_LOGIN) return;
     console.log("modifyCartItemNum uid: ", user_id);
 
     const data = {user_id: user_id, book_id: book_id, num: num};
@@ -59,6 +59,8 @@ export const modifyCartItemNum = (book_id, num, callback) => {
 
 export const getAllBooksInUserCart = (callback) => {
     const user_id = localStorage.getUserId();
+    if(user_id === NOT_LOGIN) return;
+
     const data = {user_id: user_id};
     const url = `${cartServiceApiUrl}/getAllBooksInUserCart`;
     postRequest_v2(url, data, callback);
@@ -66,6 +68,8 @@ export const getAllBooksInUserCart = (callback) => {
 
 export const clearAllBooksInUserCart = (callback) => {
     const user_id = localStorage.getUserId();
+    if(user_id === NOT_LOGIN) return;
+
     const data = {user_id: user_id};
     const url = `${cartServiceApiUrl}/clearAllBooksInUserCart`;
     postRequest_v2(url, data, callback);

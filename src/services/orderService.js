@@ -2,7 +2,7 @@ import localStorage from "../utils/localStorage";
 import config from "../utils/config";
 import {postRequest_v2, postRequestNoPara} from "../utils/ajax";
 import moment from "moment";
-import {SECOND_SUF} from "../utils/constant";
+import {NOT_LOGIN, SECOND_SUF} from "../utils/constant";
 
 const root = "/order";
 const orderServiceApiUrl = config.apiUrl + root;
@@ -53,8 +53,9 @@ export const filterOrderByBookName = (data, name) => {
 }
 
 export const createOrderFromUserCart = (callback) => {
-    // TODO !!!!!!!!! check is authed or not
+
     const user_id = localStorage.getUserId();
+    if(user_id === NOT_LOGIN) return;
     console.log("createOrderFromUserCart ", user_id);
 
     const data = {user_id: user_id};
@@ -81,8 +82,9 @@ export const getItemsAndTotalByOrderId = (order_id, callback) => {
 }
 
 export const getOrdersByUserIdAndStatus = (status, callback) => {
-    // TODO !!!!!!!!! check is authed or not
+
     const user_id = localStorage.getUserId();
+    if(user_id === NOT_LOGIN) return;
 
     const data = {status: status, user_id: user_id};
     const url = `${orderServiceApiUrl}/getByUserIdAndStatus`;
@@ -130,8 +132,10 @@ export const analysisUserConsume = (startDate, endDate, callback) => {
 export const getUserConsumeResultByUserId = (startDate, endDate, callback) => {
     const url = `${orderServiceApiUrl}/getUserConsumeResultByUserId`;
     console.log("getUserConsumeResultByUserId startDate, endDate", startDate, endDate);
-    // TODO !!!!!!!!! check is authed or not
+
     const user_id = localStorage.getUserId();
+    if(user_id === NOT_LOGIN) return;
+
     if(startDate === "" && endDate === ""){
         const data = {user_id: user_id,};
         console.log("startDate === \"\" && endDate === \"\", uid", user_id);
@@ -147,8 +151,10 @@ export const getUserConsumeResultByUserId = (startDate, endDate, callback) => {
 export const getUserConsumeTotalResultByUserId = (startDate, endDate, callback) => {
     const url = `${orderServiceApiUrl}/getUserConsumeTotalResultByUserId`;
     console.log("getUserConsumeTotalResultByUserId startDate, endDate", startDate, endDate);
-    // TODO !!!!!!!!! check is authed or not
+
     const user_id = localStorage.getUserId();
+    if(user_id === NOT_LOGIN) return;
+
     if(startDate === "" && endDate === ""){
         const data = {user_id: user_id,};
         console.log("startDate === \"\" && endDate === \"\", uid", user_id);
