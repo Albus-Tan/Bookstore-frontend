@@ -142,3 +142,20 @@ export const getUserConsumeResultByUserId = (startDate, endDate, callback) => {
         postRequest_v2(url, data, callback);
     }
 }
+
+
+export const getUserConsumeTotalResultByUserId = (startDate, endDate, callback) => {
+    const url = `${orderServiceApiUrl}/getUserConsumeTotalResultByUserId`;
+    console.log("getUserConsumeTotalResultByUserId startDate, endDate", startDate, endDate);
+    // TODO !!!!!!!!! check is authed or not
+    const user_id = localStorage.getUserId();
+    if(startDate === "" && endDate === ""){
+        const data = {user_id: user_id,};
+        console.log("startDate === \"\" && endDate === \"\", uid", user_id);
+        postRequest_v2(url, data, callback);
+    } else {
+        const data = {user_id: user_id, startDate:startDate + SECOND_SUF, endDate:endDate + SECOND_SUF};
+        console.log("uid", user_id);
+        postRequest_v2(url, data, callback);
+    }
+}

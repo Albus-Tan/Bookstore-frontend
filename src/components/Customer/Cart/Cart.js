@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import {Decimal} from 'decimal.js'
 import {getAllBooksInUserCart} from "../../../services/cartService";
 import {createOrderFromUserCart} from "../../../services/orderService";
+import {message} from "antd";
 
 export class Cart extends React.Component{
 
@@ -41,7 +42,16 @@ export class Cart extends React.Component{
             // pass orderId to cartView, and it will navigate to order detail page
             this.props.onOrderGenerate(orderId);
         }
-        createOrderFromUserCart(callback);
+
+        const cartData = this.state.cartData;
+        let legal = true;
+        cartData.map((ci)=>{
+            if(ci.book.inventory < ci.num){
+                legal = false;
+                message.error(`${ci.book.name}库存量${ci.book.inventory}本，不足购买量！`)
+            }
+        })
+        if(legal) createOrderFromUserCart(callback);
     }
 
     render(){
