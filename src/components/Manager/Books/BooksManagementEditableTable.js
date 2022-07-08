@@ -136,7 +136,7 @@ export class BooksManagementEditableTable extends React.Component{
                 this.setState(() => ({ editingKey: '', }));
             }
 
-            updateBookInfo({ ...item, ...row } ,callback);
+            updateBookInfo({ ...item, ...row, image: row.cover } ,callback);
 
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
@@ -212,7 +212,7 @@ export class BooksManagementEditableTable extends React.Component{
 
                 const data = {
                     ...values,
-                    image: "",
+                    image: values.Cover,
                 }
 
                 console.log('Validated processed data:', data);
