@@ -253,7 +253,7 @@ export class BooksManagementEditableTable extends React.Component{
                 dataIndex: 'cover',
                 width: '10%',
                 editable: true,
-                inputType: 'image',
+                inputType: 'text',
             },
             {
                 title: 'ISBN',
@@ -355,14 +355,15 @@ export class BooksManagementEditableTable extends React.Component{
                             <Form.Item name="isbn" label={columns[3].title} rules={[{required: true, message: 'Please input ' + columns[3].title ,},]}>
                                 <Input />
                             </Form.Item>
-                            <Form.Item name={columns[2].title} label={columns[2].title} rules={[{required: false, message: 'Please input ' + columns[2].title ,},]}>
-                                <Upload
-                                    action={config.imageUploadUrl}
-                                    listType="picture"
-                                    maxCount={1}
-                                >
-                                    <Button icon={<UploadOutlined />}>Click to upload cover</Button>
-                                </Upload>
+                            <Form.Item name={columns[2].title} label={columns[2].title} rules={[{required: false, message: 'Please input ' + columns[2].title + ' url' ,},]}>
+                                <Input />
+                                {/*<Upload*/}
+                                {/*    action={config.imageUploadUrl}*/}
+                                {/*    listType="picture"*/}
+                                {/*    maxCount={1}*/}
+                                {/*>*/}
+                                {/*    <Button icon={<UploadOutlined />}>Click to upload cover</Button>*/}
+                                {/*</Upload>*/}
                             </Form.Item>
                             <Form.Item name="inventory" label={columns[4].title} style={{width:'100px'}} rules={[{required: true, message: 'Please input ' + columns[4].title ,},]}>
                                 <Input type='number'/>
