@@ -136,7 +136,17 @@ export class BooksManagementEditableTable extends React.Component{
                 this.setState(() => ({ editingKey: '', }));
             }
 
-            updateBookInfo({ ...item, ...row, image: row.cover } ,callback);
+            console.log(row.cover);
+            console.log(typeof row.cover);
+            // http://img3m7.ddimg.cn/48/0/24106647-1_w_6.jpg
+
+            if((typeof row.cover) == "string"){
+                updateBookInfo({ ...item, ...row, image: row.cover} ,callback);
+            } else {
+                updateBookInfo({ ...item, ...row,} ,callback);
+            }
+
+
 
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
