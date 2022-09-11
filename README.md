@@ -1,6 +1,6 @@
 # Run the project
 
-为修改第三方库全局属性，对 create-react-app 的默认配置进行自定义，我使用了 craco （一个对 create-react-app 进行自定义配置的社区解决方案）。因此在运行前需要安装 craco后再运行
+为修改第三方库全局属性，对 create-react-app 的默认配置进行自定义，使用了 craco （一个对 create-react-app 进行自定义配置的社区解决方案）。因此在运行前需要安装 craco后再运行
 
 ```bash
 $ yarn add @craco/craco
@@ -15,8 +15,6 @@ $ yarn add craco-less
 https://ant.design/docs/react/use-with-create-react-app-cn
 
 https://blog.csdn.net/weixin_51364974/article/details/120437346
-
-麻烦老师和助教了！
 
 
 
