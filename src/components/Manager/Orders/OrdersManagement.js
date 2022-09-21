@@ -77,7 +77,6 @@ export class OrdersManagement extends React.Component{
         let newData = dataSource.filter((item) => {
             if(item.key === key){
                 let newItem = item;
-                // TODO
                 newItem.status = getCodeByText_ORDERSTATUS("Cancelled");
                 return newItem;
             }

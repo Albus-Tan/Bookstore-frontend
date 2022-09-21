@@ -2,8 +2,10 @@ import React from "react";
 import {Link} from 'react-router-dom';
 import '../../../css/head.css'
 import localStorage from "../../../utils/localStorage";
+import {logout} from "../../../services/userService";
 
 export class HeadBar extends React.Component {
+
     render() {
         return (
             <div style={{paddingTop: "80px", height: "140px"}}>
@@ -36,6 +38,7 @@ export class HeadBar extends React.Component {
                         </Link>
                         <Link to="/login" onClick={() => {
                             localStorage.clearUser();
+                            logout();
                         }}>
                             <bar_li style={{float: 'right'}}>
                                 <bar_h2>{localStorage.hasLogin() ? 'Log out' : 'Log in'}</bar_h2>

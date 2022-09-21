@@ -14,6 +14,16 @@ export const register = (_data, callback) => {
     postRequest_v2(url, data, callback);
 };
 
+export const logout = () => {
+
+    const callback = (data) => {
+        if(data !== -1) message.success("Logout Success, " + (data / 1000.0).toFixed(1) + " seconds online");
+    }
+
+    const url = `${userServiceApiUrl}/logout`;
+    postRequestNoPara(url,callback);
+}
+
 export const login = (username, password, oriCallback) => {
 
     const data = {username: username, password: password};
