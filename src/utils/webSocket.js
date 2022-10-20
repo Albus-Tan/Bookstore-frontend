@@ -1,8 +1,3 @@
-/**
- * 参数：[socketOpen|socketClose|socketMessage|socketError] = func，[socket连接成功时触发|连接关闭|发送消息|连接错误]
- * timeout：连接超时时间
- * @type {module.webSocket}
- */
 module.exports = class webSocket {
 
     constructor(socketUrl, onmessageCallback) {
