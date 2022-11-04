@@ -36,6 +36,11 @@ export class HeadBar extends React.Component {
                                 <bar_h2>Analysis</bar_h2>
                             </bar_li>
                         </Link>
+                        <Link to="/search">
+                            <bar_li>
+                                <bar_h2>Detail Search</bar_h2>
+                            </bar_li>
+                        </Link>
                         <Link to="/login" onClick={() => {
                             localStorage.clearUser();
                             logout();

@@ -30,3 +30,9 @@ export const getBookById = (id, callback) => {
     const url = `${bookServiceApiUrl}/getById`;
     postRequest_v2(url, data, callback);
 };
+
+export const queryBooksByDescription = (keyword, callback) => {
+    const data = {keyword: keyword};
+    const url = `${bookServiceApiUrl}/querying/description`;
+    postRequest_v2(url, data, callback);
+}
